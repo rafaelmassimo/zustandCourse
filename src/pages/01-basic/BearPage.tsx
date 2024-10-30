@@ -1,5 +1,6 @@
 import { WhiteCard } from '../../components';
 import { useBearStore } from '../../stores';
+import { useShallow } from 'zustand/shallow';
 
 export const BearPage = () => {
 	return (
@@ -14,6 +15,8 @@ export const BearPage = () => {
 				<PolarBear />
 
 				<PandaBear />
+
+				<BearsDisplay />
 			</div>
 		</>
 	);
@@ -35,7 +38,6 @@ const BlackBear = () => {
 		</WhiteCard>
 	);
 };
-
 
 const PolarBear = () => {
 	const polarBear = useBearStore((state) => state.polarBears);
@@ -65,6 +67,30 @@ const PandaBear = () => {
 				<span className="text-3xl mx-2 lg:mx-10"> {pandaBear} </span>
 				<button onClick={() => increasePolarBears(-1)}>-1</button>
 			</div>
+		</WhiteCard>
+	);
+};
+
+const BearsDisplay = () => {
+	//*This useShallow avoid that this state has been re-render when I click the button with doNothing
+	// const bears = useBearStore(useShallow ((state) => state.bears));
+	// const doNothing = useBearStore((state) => state.doNothing);
+	
+	const bears = useBearStore((state) => state.bears);
+	const addBear = useBearStore((state) =>  state.addBear);
+	const clearBear = useBearStore((state) =>  state.clearBears);
+
+
+
+	return (
+		<WhiteCard>
+			{/* <button onClick={doNothing}> </button> */}
+
+			<h1>Osos</h1>
+			<button onClick={addBear}>Add Bear</button>
+			<button onClick={clearBear}>Clear Bear</button>
+
+			<pre>{JSON.stringify(bears, null, 2)}</pre>
 		</WhiteCard>
 	);
 };
