@@ -1,96 +1,117 @@
+import { useShallow } from 'zustand/react/shallow';
 import { WhiteCard } from '../../components';
 import { useBearStore } from '../../stores';
-// import { useShallow } from 'zustand/shallow';
 
 export const BearPage = () => {
-	return (
-		<>
-			<h1>Contador de Osos</h1>
-			<p>Manejo de estado simple de Zustand</p>
-			<hr />
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-				<BlackBear />
+  return (
+    <>
+      <h1>Contador de Osos</h1>
+      <p>Manejo de estado simple de Zustand</p>
+      <hr />
 
-				<PolarBear />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
 
-				<PandaBear />
+        <BlackBears />
 
-				<BearsDisplay />
-			</div>
-		</>
-	);
-};
-export default BearPage;
+        <PolarBears />
 
-const BlackBear = () => {
-	const blackBear = useBearStore((state) => state.blackBears);
-	const increaseBlackBears = useBearStore((state) => state.increaseBlackBears);
-	return (
-		<WhiteCard centered>
-			<h2>Osos Negros</h2>
+        <PandaBears />
 
-			<div className="flex flex-col md:flex-row">
-				<button onClick={() => increaseBlackBears(1)}> +1</button>
-				<span className="text-3xl mx-2 lg:mx-10"> {blackBear} </span>
-				<button onClick={() => increaseBlackBears(-1)}>-1</button>
-			</div>
-		</WhiteCard>
-	);
+        <BearsDisplay />
+
+      </div>
+
+    </>
+  );
 };
 
-const PolarBear = () => {
-	const polarBear = useBearStore((state) => state.polarBears);
-	const increasePolarBears = useBearStore((state) => state.increasePolarBears);
-	return (
-		<WhiteCard centered>
-			<h2>Osos Negros</h2>
 
-			<div className="flex flex-col md:flex-row">
-				<button onClick={() => increasePolarBears(1)}> +1</button>
-				<span className="text-3xl mx-2 lg:mx-10"> {polarBear} </span>
-				<button onClick={() => increasePolarBears(-1)}>-1</button>
-			</div>
-		</WhiteCard>
-	);
+
+export const BlackBears = () => {
+
+
+  const blackBears = useBearStore( state => state.blackBears );
+  const increaseBlackBears = useBearStore( state => state.increaseBlackBears );
+  // const { blackBears, increaseBlackBears  } = useBearStore(state => state);
+
+  return (
+    <WhiteCard centered>
+      <h2>Osos Negros</h2>
+
+      <div className="flex flex-col md:flex-row">
+        <button onClick={ () => increaseBlackBears( +1 ) }> +1</button>
+        <span className="text-3xl mx-2 lg:mx-10"> { blackBears } </span>
+        <button onClick={ () => increaseBlackBears( -1 ) }>-1</button>
+      </div>
+
+    </WhiteCard>
+  );
 };
 
-const PandaBear = () => {
-	const pandaBear = useBearStore((state) => state.pandaBears);
-	const increasePolarBears = useBearStore((state) => state.increasePandaBears);
-	return (
-		<WhiteCard centered>
-			<h2>Osos Negros</h2>
 
-			<div className="flex flex-col md:flex-row">
-				<button onClick={() => increasePolarBears(1)}> +1</button>
-				<span className="text-3xl mx-2 lg:mx-10"> {pandaBear} </span>
-				<button onClick={() => increasePolarBears(-1)}>-1</button>
-			</div>
-		</WhiteCard>
-	);
+export const PandaBears = () => {
+
+
+  const pandaBears = useBearStore( state => state.pandaBears );
+  const increasePandaBears = useBearStore( state => state.increasePandaBears );
+
+  return (
+    <WhiteCard centered>
+      <h2>Osos Panda</h2>
+
+      <div className="flex flex-col md:flex-row">
+        <button onClick={ () => increasePandaBears( +1 ) }> +1</button>
+        <span className="text-3xl mx-2 lg:mx-10"> { pandaBears } </span>
+        <button onClick={ () => increasePandaBears( -1 ) }>-1</button>
+      </div>
+
+    </WhiteCard>
+  );
 };
 
-const BearsDisplay = () => {
-	//*This useShallow avoid that this state has been re-render when I click the button with doNothing
-	// const bears = useBearStore(useShallow ((state) => state.bears));
-	// const doNothing = useBearStore((state) => state.doNothing);
-	
-	const bears = useBearStore((state) => state.bears);
-	const addBear = useBearStore((state) =>  state.addBear);
-	const clearBear = useBearStore((state) =>  state.clearBears);
+
+export const PolarBears = () => {
 
 
+  const polarBears = useBearStore( state => state.polarBears );
+  const increasePolarBears = useBearStore( state => state.increasePolarBears );
 
-	return (
-		<WhiteCard>
-			{/* <button onClick={doNothing}> </button> */}
+  return (
+    <WhiteCard centered>
+      <h2>Osos Polares</h2>
 
-			<h1>Osos</h1>
-			<button onClick={addBear}>Add Bear</button>
-			<button onClick={clearBear}>Clear Bear</button>
+      <div className="flex flex-col md:flex-row">
+        <button onClick={ () => increasePolarBears( +1 ) }> +1</button>
+        <span className="text-3xl mx-2 lg:mx-10"> { polarBears } </span>
+        <button onClick={ () => increasePolarBears( -1 ) }>-1</button>
+      </div>
 
-			<pre>{JSON.stringify(bears, null, 2)}</pre>
-		</WhiteCard>
-	);
+    </WhiteCard>
+  );
 };
+
+
+export const BearsDisplay = () => {
+
+  const bears = useBearStore( useShallow( state => state.bears ));
+  // const bears = useBearStore( state => state.bears );
+  const doNothing = useBearStore( state => state.doNothing );
+  const addBear = useBearStore( state => state.addBear );
+  const clearBears = useBearStore( state => state.clearBears );
+
+  return (
+    <WhiteCard>
+      <h1>Osos</h1>
+      <button onClick={ doNothing }>No hace nada</button>
+      <button className="mt-2" onClick={ addBear }>Agregar oso</button>
+      <button className="mt-2" onClick={ clearBears }>Borrar osos</button>
+
+
+      <pre>
+        { JSON.stringify(bears, null, 2) }
+      </pre>
+      
+    </WhiteCard>
+  )
+}
