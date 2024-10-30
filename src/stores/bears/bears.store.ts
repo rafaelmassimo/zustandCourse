@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+
 interface Bear {
 	id: number;
 	name: string;
@@ -9,8 +10,11 @@ interface BearState {
 	blackBears: number;
 	polarBears: number;
 	pandaBears: number;
-
 	bears: Bear[];
+
+	computed: {
+		totalBears: number;
+	};
 
 	increaseBlackBears: (by: number) => void;
 	increasePolarBears: (by: number) => void;
@@ -23,7 +27,7 @@ interface BearState {
 	clearBears: () => void;
 }
 
-export const useBearStore = create<BearState>()((set) => ({
+export const useBearStore = create<BearState>()((set, get) => ({
 	blackBears: 10,
 	polarBears: 5,
 	pandaBears: 1,
@@ -33,9 +37,16 @@ export const useBearStore = create<BearState>()((set) => ({
 			name: 'Black Bear',
 		},
 	],
-    //Test purpose
-    clearBears: () => set((state) => ({ bears: [] })),
-    
+
+	computed: {
+		get totalBears() {
+			return get().blackBears + get().polarBears + get().pandaBears + get().bears.length;
+		},
+	},
+
+	//Test purpose
+	clearBears: () => set((state) => ({ bears: [] })),
+
 	increaseBlackBears: (by: number) => set((state) => ({ blackBears: state.blackBears + by })),
 	increasePolarBears: (by: number) => set((state) => ({ polarBears: state.polarBears + by })),
 	increasePandaBears: (by: number) => set((state) => ({ pandaBears: state.pandaBears + by })),

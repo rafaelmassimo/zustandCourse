@@ -1,6 +1,6 @@
 import { WhiteCard } from '../../components';
 import { useBearStore } from '../../stores';
-import { useShallow } from 'zustand/shallow';
+// import { useShallow } from 'zustand/shallow';
 
 export const BearPage = () => {
 	return (
