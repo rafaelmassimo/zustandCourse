@@ -1,6 +1,6 @@
 import { create, type StateCreator } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import { customSessionStorage } from '../storages/session.storage';
+import { devtools, persist } from 'zustand/middleware';
+
 import { firebaseStorage } from '../storages/firebase.storage';
 
 interface PersonState {
@@ -13,18 +13,24 @@ interface Actions {
 	setLastName: (value: string) => void;
 }
 
-const storeAPI: StateCreator<PersonState & Actions> = (set) => ({
+//The store contains the key inside my state object like 'first name and last name' and the methods that comes from the interface initially created
+const storeAPI: StateCreator<PersonState & Actions, [['zustand/devtools', never]]> = (set) => ({
 	firstName: '',
 	lastName: '',
 
-	setFirstName: (value: string) => set((state) => ({ firstName: value })),
-	setLastName: (value: string) => set((state) => ({ lastName: value })),
+	setFirstName: (value: string) => set({ firstName: value }, false, 'setFirstName'),
+	setLastName: (value: string) => set({ lastName: value }, false, 'setLastName'),
 });
 
 // In this store we are applying the middleware Persist note that we have remove the store from inside the create block and put outside to increase the readability
 export const userPersonStore = create<PersonState & Actions>()(
-	persist(storeAPI, {
-		name: 'person-storage',
-		storage: firebaseStorage,
-	}),
+
+	//*Devtools helps you to add the feature to use the devtool extension on chrome
+	devtools(
+		//To save the state on the local storage
+		persist(storeAPI, {
+			name: 'person-storage',
+			storage: firebaseStorage,
+		}),
+	),
 );
