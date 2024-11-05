@@ -30,7 +30,7 @@ export const userPersonStore = create<PersonState & Actions>()(
 		//To save the state on the local storage
 		persist(storeAPI, {
 			name: 'person-storage',
-			storage: firebaseStorage,
+			// storage: firebaseStorage,
 		}),
 	),
 );
