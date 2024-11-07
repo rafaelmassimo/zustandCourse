@@ -11,13 +11,12 @@ interface BearState {
 	polarBears: number;
 	pandaBears: number;
 
-	bears: Bear[]; 
-  totalBears: () => number;
+	bears: Bear[];
+	totalBears: () => number;
 
 	// computed: {
 	// 	totalBears: number;
 	// };
-
 
 	increaseBlackBears: (by: number) => void;
 	increasePolarBears: (by: number) => void;
@@ -29,7 +28,7 @@ interface BearState {
 }
 
 export const useBearStore = create<BearState>()(
-  //By adding this persist, the state is going to be stored on the local-storage automatically
+	//By adding this persist, the state is going to be stored on the local-storage automatically
 	persist(
 		(set, get) => ({
 			blackBears: 10,
@@ -44,9 +43,9 @@ export const useBearStore = create<BearState>()(
 			// 	},
 			// },
 
-      totalBears: () => {
-        return get().blackBears + get().polarBears + get().pandaBears + get().bears.length;
-      },
+			totalBears: () => {
+				return get().blackBears + get().polarBears + get().pandaBears + get().bears.length;
+			},
 
 			increaseBlackBears: (by: number) => set((state) => ({ blackBears: state.blackBears + by })),
 			increasePolarBears: (by: number) => set((state) => ({ polarBears: state.polarBears + by })),
@@ -62,7 +61,7 @@ export const useBearStore = create<BearState>()(
 				})),
 			clearBears: () => set({ bears: [] }),
 		}),
-    //This is the name of the store
+		//This is the name of the store
 		{ name: 'bears-store' },
 	),
 );
