@@ -13,6 +13,7 @@ const SingleTask = ({ task }: Props) => {
 	return (
 		<div
 			draggable={true}
+			//Where I'm sending the ID of the task that I'm moving 
 			onDragStart={() => setDraggingTaskId(task.id)}
 			onDragEnd={() => removeDraggingTaskId()}
 			className="mt-5 flex items-center justify-between p-2"

@@ -1,7 +1,9 @@
-import { DragEvent } from 'react';
+import { DragEvent, useState } from 'react';
 import { IoCheckmarkCircleOutline, IoEllipsisHorizontalOutline } from 'react-icons/io5';
+import classNames from 'classnames';
 import { Task, TaskStatus } from '../../interfaces';
 import SingleTask from './SingleTask';
+import { useTaskStore } from '../../stores';
 
 interface Props {
 	title: string;
@@ -10,27 +12,57 @@ interface Props {
 }
 
 export const JiraTasks = ({ title, value, tasks }: Props) => {
+	//This operator makes if the isdragging has some value like ID doesnt matter it will make it true and if is null because is empty is going to be false
+	const isDragging = useTaskStore((state) => !!state.draggingTaskId);
+
+	const onTaskDrop = useTaskStore((state)=> state.onTaskDrop)
+
+	//*I do not need these const anymore because I have a simpler function to do the same thing
+	// const changeTaskStatus = useTaskStore((state)=> state.changeTaskStatus)
+	// const draggingTaskId = useTaskStore((state)=> state.draggingTaskId)
+
+	const [onDragOver, setOnDragOver] = useState(false);
+
+
+	//>>All the actions is going to be the same underneath, where is going to change is inside the div with the onActions
+
+	//Moving the mouse over the element
 	const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
+		setOnDragOver(true)
 		console.log('onDragOver');
 	};
-
+	//Moving OUT the mouse over the element
 	const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
+		setOnDragOver(false)
 		console.log('handleDragLeave');
 	};
-
+	//When the drop has been released
 	const handleDrop = (event: DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
+		setOnDragOver(false)
+		onTaskDrop(value)// The value contains the new status
+		// changeTaskStatus(draggingTaskId!,value)
 		console.log('handleDrop', value);
 	};
 
 	return (
 		<div
+		//*When the mouse is over the div
 			onDragOver={handleDragOver}
+		//*When the mouse has left the div
 			onDragLeave={handleDragLeave}
+		//*When the element has been dropped inside the div
 			onDrop={handleDrop}
-			className="!text-black relative flex flex-col rounded-[20px]  bg-white bg-clip-border shadow-3xl shadow-shadow-500  w-full !p-4 3xl:p-![18px]"
+			className={classNames(
+				'!text-black relative border-4 flex flex-col rounded-[20px]  bg-white bg-clip-border shadow-3xl shadow-shadow-500  w-full !p-4 3xl:p-![18px]',
+				{
+					' border-blue-500 border-dotted': isDragging,
+					' border-green-500 border-dotted': isDragging && onDragOver,
+
+				},
+			)}
 		>
 			{/* Task Header */}
 			<div className="relative flex flex-row justify-between">

@@ -4,6 +4,7 @@ import { logger } from '../../stores/middlewares/logger.middleware';
 
 export const JiraPage = () => {
 	const tasks = useTaskStore((state) => state.tasks);
+	//Where I'm checking which tasks has the status as '...' and then pass as props to the JiraTasks Component
 	const openTasks = useTaskStore((state) => state.getTasksByStatus('open'));
 	const inProgressTasks = useTaskStore((state) => state.getTasksByStatus('in-progress'));
 	const doneTasks = useTaskStore((state) => state.getTasksByStatus('done'));
