@@ -35,7 +35,7 @@ export const JiraTasks = ({ title, status, tasks }: Props) => {
 			inputValidator: (value) => {
 				if (!value) {
 					return 'You need to add a title';
-				}
+				} 
 			},
 		});
 		if (!isConfirmed) return;

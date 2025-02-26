@@ -2,6 +2,8 @@ import { create, StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { Task, TaskStatus } from '../../interfaces';
 import { devtools } from 'zustand/middleware';
+import { produce } from 'immer';
+import { immer } from 'zustand/middleware/immer';
 
 interface TaskState {
 	draggingTaskId?: string;
@@ -14,7 +16,7 @@ interface TaskState {
 	onTaskDrop: (newStatus: TaskStatus) => void;
 }
 
-const storeApi: StateCreator<TaskState, [['zustand/devtools', never]]> = (set, get) => ({
+const storeApi: StateCreator<TaskState,[["zustand/immer", never]]> = (set, get) => ({
 	draggingTaskId: undefined,
 	tasks: {
 		//'ABC-1' is the key that is why I can access it by using: [taskId]
@@ -32,18 +34,33 @@ const storeApi: StateCreator<TaskState, [['zustand/devtools', never]]> = (set, g
 
 	addTask: (title: string, status: TaskStatus) => {
 		const newTask = { id: uuidv4(), title, status };
-		set((state) => ({
-			tasks: {
-				...state.tasks,
-				//Here I'm adding a new object where the key is the newTask.id and the rest of the object as above
-				[newTask.id]: newTask,
-			},
-		}));
+
+		set(state => {
+			state.tasks[newTask.id] = newTask
+		});
+
+
+	
+		//?It requited to run npm i immer to make produce work
+		//Here I'm using 'produce' to add a new task, which is working fine if I test it
+		// set(produce((state: TaskState) => {
+		// 	state.tasks[newTask.id] = newTask;
+		// })
+		// );
+
+		//?Native way to use zustand
+		// set((state) => ({
+		// 	tasks: {
+		// 		...state.tasks,
+		// 		//Here I'm adding a new object where the key is the newTask.id and the rest of the object as above
+		// 		[newTask.id]: newTask,
+		// 	},
+		// }));
 	},
 
-	//Where I'm setting the state with the TasksID
+	//Here I'm setting the state with the TasksID
 	setDraggingTaskId: (taskId: string) => {
-		set({ draggingTaskId: taskId }, false, 'setDraggingId');
+		set({ draggingTaskId: taskId });
 	},
 	//After finishing dropped the element, I need to clean the draggingTaskId, because I'll have just one for all tasks, because I can move just one/time
 	removeDraggingTaskId: () => {
@@ -51,16 +68,26 @@ const storeApi: StateCreator<TaskState, [['zustand/devtools', never]]> = (set, g
 	},
 
 	changeTaskStatus: (taskId: string, status: TaskStatus) => {
-		const task = get().tasks[taskId];
-		task.status = status; // Is the new status that I'm setting when I'm ending the drag
+		//>> This creates a shallow copy of the task object. The spread operator (...) is used to copy all properties of the task object into a new object.
+		// const task = {...get().tasks[taskId]};
+		// task.status = status; // Is the new status that I'm setting when I'm ending the drag
 
-		//This set State means I can touch everything which is inside this Store, in this case all the tasks,
-		set((state) => ({
-			tasks: {
-				...state.tasks,
-				[taskId]: task,
-			},
-		}));
+
+		set(state => {
+			state.tasks[taskId] = {
+				...state.tasks[taskId],
+				status
+			};
+		})
+
+		//? This is the native way to change the status with zustand
+		//This set State means I can touch everything that is inside this Store, in this case all tasks,
+		// set((state) => ({
+		// 	tasks: {
+		// 		...state.tasks,
+		// 		[taskId]: task,
+		// 	},
+		// }));
 	},
 
 	//This method is combination between some other methods above, to simplify the code once I'll call it on JiraTasks.tsx
@@ -75,4 +102,4 @@ const storeApi: StateCreator<TaskState, [['zustand/devtools', never]]> = (set, g
 });
 
 //Here you can create the store but first is better to setup this store inside the storeApi
-export const useTaskStore = create<TaskState>()(devtools(storeApi));
+export const useTaskStore = create<TaskState>()(devtools(immer(storeApi)));
