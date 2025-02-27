@@ -1,7 +1,7 @@
 import { create, StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { Task, TaskStatus } from '../../interfaces';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 import { produce } from 'immer';
 import { immer } from 'zustand/middleware/immer';
 
@@ -33,6 +33,7 @@ const storeApi: StateCreator<TaskState,[["zustand/immer", never]]> = (set, get) 
 	},
 
 	addTask: (title: string, status: TaskStatus) => {
+		// Here I'm creating a new object that it will be saved taking the spot of the previous one, so updating the array of objects
 		const newTask = { id: uuidv4(), title, status };
 
 		set(state => {
@@ -41,14 +42,14 @@ const storeApi: StateCreator<TaskState,[["zustand/immer", never]]> = (set, get) 
 
 
 	
-		//?It requited to run npm i immer to make produce work
+		//? It requited to run npm i immer to make produce work
 		//Here I'm using 'produce' to add a new task, which is working fine if I test it
 		// set(produce((state: TaskState) => {
 		// 	state.tasks[newTask.id] = newTask;
 		// })
 		// );
 
-		//?Native way to use zustand
+		//? Native way to use zustand
 		// set((state) => ({
 		// 	tasks: {
 		// 		...state.tasks,
@@ -68,8 +69,8 @@ const storeApi: StateCreator<TaskState,[["zustand/immer", never]]> = (set, get) 
 	},
 
 	changeTaskStatus: (taskId: string, status: TaskStatus) => {
-		//>> This creates a shallow copy of the task object. The spread operator (...) is used to copy all properties of the task object into a new object.
 		// const task = {...get().tasks[taskId]};
+		//>> This creates a shallow copy of the task object. The spread operator (...) is used to copy all properties of the task object into a new object.
 		// task.status = status; // Is the new status that I'm setting when I'm ending the drag
 
 
@@ -102,4 +103,13 @@ const storeApi: StateCreator<TaskState,[["zustand/immer", never]]> = (set, get) 
 });
 
 //Here you can create the store but first is better to setup this store inside the storeApi
-export const useTaskStore = create<TaskState>()(devtools(immer(storeApi)));
+export const useTaskStore = create<TaskState>()(devtools(
+	// The persist is going to save it inside the local storage
+	persist(
+		immer(storeApi), {
+			name: "task-store"
+		}
+
+	)
+
+));
