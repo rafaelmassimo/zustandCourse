@@ -1,8 +1,21 @@
 import { WhiteCard } from '../../components';
+import { useWeddingBoundStore } from '../../stores/wedding';
 
 
 
 export const WeddingInvitationPage = () => {
+
+  // Here I'm calling the store that I have create on the index page which contains all the different slices as 'firstName'
+  const firstName = useWeddingBoundStore (state => state.firstName);
+  const lastName = useWeddingBoundStore (state => state.lastName);
+  const guestNumber = useWeddingBoundStore (state => state.guestsCount);
+
+  // Secondly I call the set action to be able to use the methods that I've created on index page to change the value on the different slices
+  const setFirstName = useWeddingBoundStore (state => state.setFirstName);
+  const setLastName = useWeddingBoundStore(state => state.setLastName); 
+  const setGuestCounter = useWeddingBoundStore(state => state.setGuestCount);
+  
+
   return (
     <>
       <h1>Invitación de Boda</h1>
@@ -18,13 +31,15 @@ export const WeddingInvitationPage = () => {
                   <label
                     className="mb-3 block text-base font-medium text-[#07074D]"
                   >
-                    Primer Nombre
+                    First Name 
                   </label>
                   <input
                     type="text"
                     name="firstName"
                     id="firstName"
-                    placeholder="Primer Nombre"
+                    placeholder="first name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                   />
                 </div>
               </div>
@@ -33,13 +48,15 @@ export const WeddingInvitationPage = () => {
                   <label
                     className="mb-3 block text-base font-medium text-[#07074D]"
                   >
-                    Apellido
+                    Last Name
                   </label>
                   <input
                     type="text"
                     name="lastName"
                     id="lastName"
-                    placeholder="Apellido"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
               </div>
@@ -57,6 +74,8 @@ export const WeddingInvitationPage = () => {
                 placeholder="5"
                 min="0"
                 className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                value={guestNumber}
+                onChange={(e) => setGuestCounter(+e.target.value)}
               />
             </div>
 
