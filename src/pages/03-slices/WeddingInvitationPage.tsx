@@ -9,12 +9,16 @@ export const WeddingInvitationPage = () => {
   const firstName = useWeddingBoundStore (state => state.firstName);
   const lastName = useWeddingBoundStore (state => state.lastName);
   const guestNumber = useWeddingBoundStore (state => state.guestsCount);
+  const eventYYYYMMDD = useWeddingBoundStore(state => state.eventYYYYMMDD())
+  const eventHHMM = useWeddingBoundStore(state => state.eventHHMM())
 
   // Secondly I call the set action to be able to use the methods that I've created on index page to change the value on the different slices
   const setFirstName = useWeddingBoundStore (state => state.setFirstName);
   const setLastName = useWeddingBoundStore(state => state.setLastName); 
   const setGuestCounter = useWeddingBoundStore(state => state.setGuestCount);
-  
+  const setEventDate = useWeddingBoundStore(state => state.setEventDate);
+  const setEventTime = useWeddingBoundStore(state => state.setEventTime);
+  4
 
   return (
     <>
@@ -85,12 +89,14 @@ export const WeddingInvitationPage = () => {
                   <label
                     className="mb-3 block text-base font-medium text-[#07074D]"
                   >
-                    Fecha de evento
+                    Event Date
                   </label>
                   <input
                     type="date"
                     name="eventDate"
                     id="eventDate"
+                    value={eventYYYYMMDD}
+                    onChange={(e) => setEventDate(e.target.value)}
                   />
                 </div>
               </div>
@@ -105,6 +111,8 @@ export const WeddingInvitationPage = () => {
                     type="time"
                     name="eventTime"
                     id="eventTime"
+                    value={eventHHMM}
+                    onChange={(e) => setEventTime(e.target.value)}
                   />
                 </div>
               </div>
