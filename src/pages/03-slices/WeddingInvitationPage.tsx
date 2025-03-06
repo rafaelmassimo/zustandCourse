@@ -1,165 +1,157 @@
+import { FormEvent } from 'react';
 import { WhiteCard } from '../../components';
 import { useWeddingBoundStore } from '../../stores/wedding';
 
-
-
 export const WeddingInvitationPage = () => {
+	// Here I'm calling the store that I have create on the index page which contains all the different slices as 'firstName'
+	const firstName = useWeddingBoundStore((state) => state.firstName);
+	const lastName = useWeddingBoundStore((state) => state.lastName);
+	const guestNumber = useWeddingBoundStore((state) => state.guestsCount);
+	const eventYYYYMMDD = useWeddingBoundStore((state) => state.eventYYYYMMDD());
+	const eventHHMM = useWeddingBoundStore((state) => state.eventHHMM());
+	const isConfirmed = useWeddingBoundStore((state) => state.isConfirmed);
+  const eventDate = useWeddingBoundStore((state => state.eventDate))
 
-  // Here I'm calling the store that I have create on the index page which contains all the different slices as 'firstName'
-  const firstName = useWeddingBoundStore (state => state.firstName);
-  const lastName = useWeddingBoundStore (state => state.lastName);
-  const guestNumber = useWeddingBoundStore (state => state.guestsCount);
-  const eventYYYYMMDD = useWeddingBoundStore(state => state.eventYYYYMMDD())
-  const eventHHMM = useWeddingBoundStore(state => state.eventHHMM())
+	// Secondly I call the set action to be able to use the methods that I've created on index page to change the value on the different slices
+	const setFirstName = useWeddingBoundStore((state) => state.setFirstName);
+	const setLastName = useWeddingBoundStore((state) => state.setLastName);
+	const setGuestCounter = useWeddingBoundStore((state) => state.setGuestCount);
+	const setEventDate = useWeddingBoundStore((state) => state.setEventDate);
+	const setEventTime = useWeddingBoundStore((state) => state.setEventTime);
+	const setIsConfirmed = useWeddingBoundStore((state) => state.setIsConfirmed);
 
-  // Secondly I call the set action to be able to use the methods that I've created on index page to change the value on the different slices
-  const setFirstName = useWeddingBoundStore (state => state.setFirstName);
-  const setLastName = useWeddingBoundStore(state => state.setLastName); 
-  const setGuestCounter = useWeddingBoundStore(state => state.setGuestCount);
-  const setEventDate = useWeddingBoundStore(state => state.setEventDate);
-  const setEventTime = useWeddingBoundStore(state => state.setEventTime);
-  4
+  const onSubmit = (event:FormEvent<HTMLFormElement>) => {
 
-  return (
-    <>
-      <h1>Invitación de Boda</h1>
-      <p>Zustand segmentado en slices</p>
-      <hr />
+    event.preventDefault();
 
-      <WhiteCard className="flex items-center justify-center p-12">
-        <div className="mx-auto w-full max-w-[550px]">
-          <form action="https://formbold.com/s/FORM_ID" method="POST">
-            <div className="-mx-3 flex flex-wrap">
-              <div className="w-full px-3 sm:w-1/2">
-                <div className="mb-5">
-                  <label
-                    className="mb-3 block text-base font-medium text-[#07074D]"
-                  >
-                    First Name 
-                  </label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    id="firstName"
-                    placeholder="first name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="w-full px-3 sm:w-1/2">
-                <div className="mb-5">
-                  <label
-                    className="mb-3 block text-base font-medium text-[#07074D]"
-                  >
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    id="lastName"
-                    placeholder="Last Name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="mb-5">
-              <label
-                className="mb-3 block text-base font-medium text-[#07074D]"
-              >
-                ¿Cuántos invitados traerá?
-              </label>
-              <input
-                type="number"
-                name="guestNumber"
-                id="guestNumber"
-                placeholder="5"
-                min="0"
-                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                value={guestNumber}
-                onChange={(e) => setGuestCounter(+e.target.value)}
-              />
-            </div>
+    console.log({firstName, lastName, isConfirmed, eventDate});
+    
+  }
 
-            <div className="-mx-3 flex flex-wrap">
-              <div className="w-full px-3 sm:w-1/2">
-                <div className="mb-5">
-                  <label
-                    className="mb-3 block text-base font-medium text-[#07074D]"
-                  >
-                    Event Date
-                  </label>
-                  <input
-                    type="date"
-                    name="eventDate"
-                    id="eventDate"
-                    value={eventYYYYMMDD}
-                    onChange={(e) => setEventDate(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="w-full px-3 sm:w-1/2">
-                <div className="mb-5">
-                  <label
-                    className="mb-3 block text-base font-medium text-[#07074D]"
-                  >
-                    Hora del evento
-                  </label>
-                  <input
-                    type="time"
-                    name="eventTime"
-                    id="eventTime"
-                    value={eventHHMM}
-                    onChange={(e) => setEventTime(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
+	return (
+		<>
+			<h1>Invitación de Boda</h1>
+			<p>Zustand segmentado en slices</p>
+			<hr />
 
-            <div className="mb-5">
-              <label className="mb-3 block text-base font-medium text-[#07074D]">
-                ¿Tu también vendrás?
-              </label>
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    name="isComing"
-                    id="radioButton1"
-                    className="h-5 w-5"
-                  />
-                  <label
-                    className="pl-3 text-base font-medium text-[#07074D]"
-                  >
-                    Si
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    name="isComing"
-                    id="radioButton2"
-                    className="h-5 w-5"
-                  />
-                  <label
-                    className="pl-3 text-base font-medium text-[#07074D]"
-                  >
-                    No
-                  </label>
-                </div>
-              </div>
-            </div>
+			<WhiteCard className="flex items-center justify-center p-12">
+				<div className="mx-auto w-full max-w-[550px]">
+					<form onSubmit={onSubmit}>
+						<div className="-mx-3 flex flex-wrap">
+							<div className="w-full px-3 sm:w-1/2">
+								<div className="mb-5">
+									<label className="mb-3 block text-base font-medium text-[#07074D]">
+										First Name
+									</label>
+									<input
+										type="text"
+										name="firstName"
+										id="firstName"
+										placeholder="first name"
+										value={firstName}
+										onChange={(e) => setFirstName(e.target.value)}
+									/>
+								</div>
+							</div>
+							<div className="w-full px-3 sm:w-1/2">
+								<div className="mb-5">
+									<label className="mb-3 block text-base font-medium text-[#07074D]">
+										Last Name
+									</label>
+									<input
+										type="text"
+										name="lastName"
+										id="lastName"
+										placeholder="Last Name"
+										value={lastName}
+										onChange={(e) => setLastName(e.target.value)}
+									/>
+								</div>
+							</div>
+						</div>
+						<div className="mb-5">
+							<label className="mb-3 block text-base font-medium text-[#07074D]">
+								¿Cuántos invitados traerá?
+							</label>
+							<input
+								type="number"
+								name="guestNumber"
+								id="guestNumber"
+								placeholder="5"
+								min="0"
+								className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+								value={guestNumber}
+								onChange={(e) => setGuestCounter(+e.target.value)}
+							/>
+						</div>
 
-            <div>
-              <button>
-                Enviar
-              </button>
-            </div>
-          </form>
-        </div>
-      </WhiteCard>
-    </>
-  );
+						<div className="-mx-3 flex flex-wrap">
+							<div className="w-full px-3 sm:w-1/2">
+								<div className="mb-5">
+									<label className="mb-3 block text-base font-medium text-[#07074D]">
+										Event Date
+									</label>
+									<input
+										type="date"
+										name="eventDate"
+										id="eventDate"
+										value={eventYYYYMMDD}
+										onChange={(e) => setEventDate(e.target.value)}
+									/>
+								</div>
+							</div>
+							<div className="w-full px-3 sm:w-1/2">
+								<div className="mb-5">
+									<label className="mb-3 block text-base font-medium text-[#07074D]">
+										Hora del evento
+									</label>
+									<input
+										type="time"
+										name="eventTime"
+										id="eventTime"
+										value={eventHHMM}
+										onChange={(e) => setEventTime(e.target.value)}
+									/>
+								</div>
+							</div>
+						</div>
+
+						<div className="mb-5">
+							<label className="mb-3 block text-base font-medium text-[#07074D]">
+								¿Tu también vendrás?
+							</label>
+							<div className="flex items-center space-x-6">
+								<div className="flex items-center">
+									<input
+										type="radio"
+										name="isComing"
+										id="radioButton1"
+										className="h-5 w-5"
+										checked={isConfirmed}
+										onChange={() => setIsConfirmed(true)}
+									/>
+									<label className="pl-3 text-base font-medium text-[#07074D]">Si</label>
+								</div>
+								<div className="flex items-center">
+									<input
+										type="radio"
+										name="isComing"
+										id="radioButton2"
+										className="h-5 w-5"
+										checked={!isConfirmed}
+										onChange={() => setIsConfirmed(false)}
+									/>
+									<label className="pl-3 text-base font-medium text-[#07074D]">No</label>
+								</div>
+							</div>
+						</div>
+
+						<div>
+							<button>Enviar</button>
+						</div>
+					</form>
+				</div>
+			</WhiteCard>
+		</>
+	);
 };
