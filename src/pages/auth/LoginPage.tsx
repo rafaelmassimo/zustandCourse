@@ -3,6 +3,8 @@ import { useAuthStore } from '../../stores';
 
 export const LoginPage = () => {
 
+  const navigate
+
   const loginUser = useAuthStore(state => state.loginUser)
 
   const onSubmit = (event: FormEvent<HTMLFormElement> ) => {
