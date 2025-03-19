@@ -1,38 +1,48 @@
-import { create, StateCreator } from "zustand";
-import type { AuthStatus, User } from "../../interfaces";
-import { AuthService } from "../../services/auth.service";
-import { devtools } from "zustand/middleware";
+import { create, StateCreator } from 'zustand';
+import type { AuthStatus, User } from '../../interfaces';
+import { AuthService } from '../../services/auth.service';
+import { devtools, persist } from 'zustand/middleware';
 
+//>>Correct password:
+// email: test1@google.com
+// pass: Abc123
 
 export interface AuthState {
-    status: AuthStatus;
-    token?: string;
-    user?: User
+	status: AuthStatus;
+	token?: string;
+	user?: User;
 
-    loginUser: (email: string, password: string) => Promise<void>;
+	loginUser: (email: string, password: string) => Promise<void>;
+	checkAuthStatus: () => Promise<void>;
 }
 
-
 const storeApi: StateCreator<AuthState> = (set) => ({
-    status: 'unauthorized',
+	// These are the default status value
+	status: 'pending',
 
-    token: undefined,
-    user: undefined,
+	token: undefined,
+	user: undefined,
 
-    loginUser: async(email:string, password: string) => {
+	loginUser: async (email: string, password: string) => {
+		try {
+			const { token, ...user } = await AuthService.login(email, password);
+			set({ status: 'authorized', token, user });
+		} catch (error) {
+			set({ status: 'unauthorized', token: undefined, user: undefined });
+			throw 'Unauthorized';
+		}
+	},
 
-        try {
-            const {token, ...user} = await AuthService.login(email, password)
-            set({status: 'authorized', token, user})
-        } catch (error) {
-            set({status: 'unauthorized', token: undefined, user: undefined})
-            
-        }
-    }
+	checkAuthStatus: async () => {
+		try {
+			const { token, ...user } = await AuthService.checkStatus();
+			set({ status: 'authorized', token, user });
+		} catch (error) {
+			set({ status: 'unauthorized', token: undefined, user: undefined });
+		}
+	},
 });
 
 export const useAuthStore = create<AuthState>()(
-    devtools(
-        storeApi
-    )
-)
+	devtools(persist(storeApi, { name: 'auth-storage' })),
+);

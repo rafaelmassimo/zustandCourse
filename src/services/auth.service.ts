@@ -31,11 +31,13 @@ export class AuthService {
         }
     };
 
+// Static methods can be called directly on the class without creating an instance.
+// const loginResponse = await AuthService.login('email@example.com', 'password123');
     static checkStatus = async(): Promise<LoginResponse> => {
 
         try {
             
-            const {data} = await tesloApi. get('/auth/check-status')
+            const {data} = await tesloApi.get<LoginResponse>('/auth/check-status')
             return data
 
         } catch (error) {
