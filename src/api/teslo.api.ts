@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { useAuthStore } from '../stores';
 
+
+// For run docker 
+// docker compose up -d   
+
 const tesloApi = axios.create({
 	baseURL: 'http://localhost:3000/api',
 });

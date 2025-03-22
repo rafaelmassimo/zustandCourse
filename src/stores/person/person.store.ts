@@ -2,10 +2,11 @@ import { create, type StateCreator } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
 import { firebaseStorage } from '../storages/firebase.storage';
+import { useWeddingBoundStore } from '../wedding';
 
 interface PersonState {
-	firstName: String;
-	lastName: String;
+	firstName: string;
+	lastName: string;
 }
 
 interface Actions {
@@ -24,7 +25,6 @@ const storeAPI: StateCreator<PersonState & Actions, [['zustand/devtools', never]
 
 // In this store we are applying the middleware Persist note that we have remove the store from inside the create block and put outside to increase the readability
 export const userPersonStore = create<PersonState & Actions>()(
-
 	//*Devtools helps you to add the feature to use the devtool extension on chrome
 	devtools(
 		//To save the state on the local storage
@@ -34,3 +34,13 @@ export const userPersonStore = create<PersonState & Actions>()(
 		}),
 	),
 );
+
+
+//Here I'm changing the state inside the wedding state
+userPersonStore.subscribe((nextState, previouState) => {
+	const { firstName, lastName } = nextState;
+
+	useWeddingBoundStore.getState().setFirstName(firstName);
+	useWeddingBoundStore.getState().setLastName(lastName);
+	useWeddingBoundStore.getState() //if I check after the . it'll show up all set state available inside this useWedding...
+});

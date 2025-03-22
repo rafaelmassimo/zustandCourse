@@ -5,6 +5,10 @@ import { createGuestSlice, GuestSlice } from './guests.slice';
 import { createDateSlice, DateSlice } from './date.slice';
 import { ConfirmationSlice, createIsConfirmedSlice } from './confirmation.slice';
 
+
+//This Store is for manage all data inside the form in 'Boda' and all slices are inside this folder as fileName.slice
+
+
 // Create the STORE
 // Every time I'm adding a new Slice I also need to add its properties inside the Store below
 type ShareState = PersonSlice & GuestSlice & DateSlice & ConfirmationSlice;

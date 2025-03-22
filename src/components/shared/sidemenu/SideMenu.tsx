@@ -11,6 +11,7 @@ import {
 import './SideMenu.css';
 import { SideMenuItem } from './SideMenuItem';
 import { useAuthStore } from '../../../stores';
+import { User } from '../../../interfaces';
 
 interface MenuItem {
 	title: string;
@@ -45,6 +46,9 @@ const menuItems: MenuItem[] = [
 export const SideMenu = () => {
 	const logOut = useAuthStore((state) => state.logoutUser);
 
+	const {fullName} = useAuthStore((state => state.user! || 'No User')) 
+	
+
 	return (
 		<div
 			id="menu"
@@ -70,7 +74,7 @@ export const SideMenu = () => {
 							alt=""
 						/>
 					</span>
-					<span className="text-sm md:text-base font-bold">Edward Tompson</span>
+					<span className="text-sm md:text-base font-bold">{fullName}</span>
 				</a>
 			</div>
 
